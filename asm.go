@@ -248,10 +248,10 @@ func checkMemInRange(code []int64, data []int64) error {
 		a := code[i]
 		b := code[i+1]
 		if a > 0 && a >= int64(len(data)) {
-			return fmt.Errorf("a operand outside data: %d", a)
+			return fmt.Errorf("A operand outside data: %d", a)
 		}
 		if b > 0 && b >= int64(len(data)) {
-			return fmt.Errorf("a operand outside data: %d", b)
+			return fmt.Errorf("B operand outside data: %d", b)
 		}
 
 	}
