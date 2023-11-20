@@ -30,7 +30,7 @@ var tests = []struct {
 func TestRun(t *testing.T) {
 	for _, test := range tests {
 		t.Run(test.filename, func(t *testing.T) {
-			code, data, codeSymbols, dataSymbols, err := asm(filepath.Join("fixtures", test.filename))
+			code, data, codeSymbols, dataSymbols, err := asm(filepath.Join("fixtures", test.filename), ioSize)
 			if err != nil {
 				t.Fatalf("asm() err: %v", err)
 			}
@@ -50,7 +50,7 @@ func TestRun(t *testing.T) {
 
 func BenchmarkRun(b *testing.B) {
 	for _, test := range tests {
-		code, data, codeSymbols, dataSymbols, err := asm(filepath.Join("fixtures", test.filename))
+		code, data, codeSymbols, dataSymbols, err := asm(filepath.Join("fixtures", test.filename), ioSize)
 		if err != nil {
 			b.Fatalf("asm() err: %v", err)
 		}

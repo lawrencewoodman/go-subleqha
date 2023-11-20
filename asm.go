@@ -49,7 +49,7 @@ var reDirective = regexp.MustCompile(`^\.([a-zA-Z]+)$`)
 var reIndirect = regexp.MustCompile(`^\s*(\[([0-9a-zA-z\-\+]+)\])`)
 
 // Build symbol tables
-func pass1(srcLines []string) (map[string]int64, map[string]int64) {
+func pass1(srcLines []string, ioSize int64) (map[string]int64, map[string]int64) {
 	symbolType := "c"
 	var dataPos int64 = ioSize
 	var codePos int64 = 0
@@ -272,12 +272,12 @@ func printSymbols(symbols map[string]int64) {
 	fmt.Printf("\n")
 }
 
-func asm(filename string) ([]int64, []int64, map[string]int64, map[string]int64, error) {
+func asm(filename string, ioSize int64) ([]int64, []int64, map[string]int64, map[string]int64, error) {
 	srcLines, err := readFile(filename)
 	if err != nil {
 		return []int64{}, []int64{}, map[string]int64{}, map[string]int64{}, err
 	}
-	codeSymbols, dataSymbols := pass1(srcLines)
+	codeSymbols, dataSymbols := pass1(srcLines, ioSize)
 	code, data := pass2(srcLines, codeSymbols, dataSymbols)
 	if err := checkJumpsInRange(code); err != nil {
 		return []int64{}, []int64{}, map[string]int64{}, map[string]int64{}, err
@@ -287,5 +287,5 @@ func asm(filename string) ([]int64, []int64, map[string]int64, map[string]int64,
 	}
 	// printSymbols(symbols)
 	// fmt.Printf("%v\n", code)
-	return code, data, codeSymbols, dataSymbols, nil
+	return code, data[ioSize:], codeSymbols, dataSymbols, nil
 }

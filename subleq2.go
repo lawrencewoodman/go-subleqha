@@ -108,7 +108,7 @@ func (v *SUBLEQ) Run() error {
 
 func (v *SUBLEQ) LoadRoutine(code []int64, data []int64, codeSymbols map[string]int64, dataSymbols map[string]int64) {
 	copy(v.code[:], code)
-	copy(v.data[:], data)
+	copy(v.data[ioSize:], data)
 	v.codeSize = int64(len(v.code))
 	v.codeSymbols = codeSymbols
 	v.dataSymbols = dataSymbols
