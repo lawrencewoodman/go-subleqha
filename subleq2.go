@@ -91,7 +91,6 @@ func (v *SUBLEQ) Run() error {
 			if operandB == hltLoc {
 				v.hltVal = -valA
 				hlt = true
-				break
 			}
 		} else {
 			v.data[operandB] -= valA
