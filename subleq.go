@@ -16,27 +16,24 @@ import (
 	"fmt"
 )
 
-// TODO: Make these configurable
-const dataSize = 31000 // The size of the data area including the io area
-const ioSize = 1000    // The size of the io area before the true data area
-
 // Location in memory of hltVal
 // If this is used as a destination location then a HLT is executed
 const hltLoc = 0
 
 type SUBLEQHA struct {
-	code        [dataSize]int64  // Code / Program
-	data        [dataSize]int64  // Data
+	ioSize      int64
+	dataSize    int64
+	code        []int64          // Code / Program
+	data        []int64          // Data
 	pc          int64            // Program Counter
 	hltVal      int64            // A value returned by HLT
 	codeSymbols map[string]int64 // The code symbols table from the assembler - to aid debugging
 	dataSymbols map[string]int64 // The data symbols table from the assembler - to aid debugging
 	codeSize    int64            // The size of the code / program
-
 }
 
-func New() *SUBLEQHA {
-	return &SUBLEQHA{}
+func New(ioSize, dataSize int64) *SUBLEQHA {
+	return &SUBLEQHA{data: make([]int64, dataSize), ioSize: ioSize, dataSize: dataSize, codeSize: 0}
 }
 
 func (v *SUBLEQHA) Run() error {
@@ -56,7 +53,7 @@ func (v *SUBLEQHA) Run() error {
 			if operandA < 0 {
 				return fmt.Errorf("PC: %d, double indirect not supported", v.pc)
 			}
-			if operandA >= dataSize {
+			if operandA >= v.dataSize {
 				return fmt.Errorf("PC: %d, outside memory range: %d", v.pc, operandA)
 			}
 		}
@@ -66,7 +63,7 @@ func (v *SUBLEQHA) Run() error {
 			if operandB < 0 {
 				return fmt.Errorf("PC: %d, double indirect not supported", v.pc)
 			}
-			if operandB >= dataSize {
+			if operandB >= v.dataSize {
 				return fmt.Errorf("PC: %d, outside memory range: %d", v.pc, operandB)
 			}
 		}
@@ -80,14 +77,14 @@ func (v *SUBLEQHA) Run() error {
 		//fmt.Printf("PC: %7s    SUBLEQHA %s, %s, %s\n", v.addr2symbol(v.pc, true), v.addr2symbol(operandA), v.addr2symbol(operandB), v.addr2symbol(operandC, true))
 		//fmt.Printf("                      %d - %d = ", v.data[operandB], v.data[operandA])
 
-		if operandA < ioSize {
+		if operandA < v.ioSize {
 			// TODO: add function to handle this
 			valA = 0
 		} else {
 			valA = v.data[operandA]
 		}
 
-		if operandB < ioSize {
+		if operandB < v.ioSize {
 			if operandB == hltLoc {
 				v.hltVal = -valA
 				hlt = true
@@ -107,9 +104,10 @@ func (v *SUBLEQHA) Run() error {
 }
 
 func (v *SUBLEQHA) LoadRoutine(code []int64, data []int64, codeSymbols map[string]int64, dataSymbols map[string]int64) {
-	copy(v.code[:], code)
-	copy(v.data[ioSize:], data)
-	v.codeSize = int64(len(v.code))
+	v.codeSize = int64(len(code))
+	v.code = make([]int64, v.codeSize)
+	copy(v.code, code)
+	copy(v.data[v.ioSize:], data)
 	v.codeSymbols = codeSymbols
 	v.dataSymbols = dataSymbols
 }

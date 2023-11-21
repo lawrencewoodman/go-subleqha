@@ -28,13 +28,16 @@ var tests = []struct {
 }
 
 func TestRun(t *testing.T) {
+	var dataSize int64 = 31000 // The size of the data area including the io area
+	var ioSize int64 = 1000    // The size of the io area before the true data area
+
 	for _, test := range tests {
 		t.Run(test.filename, func(t *testing.T) {
 			code, data, codeSymbols, dataSymbols, err := asm(filepath.Join("fixtures", test.filename), ioSize)
 			if err != nil {
 				t.Fatalf("asm() err: %v", err)
 			}
-			v := New()
+			v := New(ioSize, dataSize)
 			v.LoadRoutine(code, data, codeSymbols, dataSymbols)
 			if err := v.Run(); err != nil {
 				t.Fatalf("Run() err: %v", err)
@@ -49,6 +52,9 @@ func TestRun(t *testing.T) {
 }
 
 func BenchmarkRun(b *testing.B) {
+	var dataSize int64 = 31000 // The size of the data area including the io area
+	var ioSize int64 = 1000    // The size of the io area before the true data area
+
 	for _, test := range tests {
 		code, data, codeSymbols, dataSymbols, err := asm(filepath.Join("fixtures", test.filename), ioSize)
 		if err != nil {
@@ -59,7 +65,7 @@ func BenchmarkRun(b *testing.B) {
 			b.StopTimer()
 
 			for n := 0; n < b.N; n++ {
-				v := New()
+				v := New(ioSize, dataSize)
 				v.LoadRoutine(code, data, codeSymbols, dataSymbols)
 
 				b.StartTimer()

@@ -91,7 +91,7 @@ func pass1(srcLines []string, ioSize int64) (map[string]int64, map[string]int64)
 	return codeSymbols, dataSymbols
 }
 
-func pass2(srcLines []string, codeSymbols, dataSymbols map[string]int64) ([]int64, []int64) {
+func pass2(srcLines []string, codeSymbols, dataSymbols map[string]int64, ioSize int64) ([]int64, []int64) {
 	outputType := "c"
 	code := make([]int64, 0)
 	data := make([]int64, ioSize)
@@ -278,7 +278,7 @@ func asm(filename string, ioSize int64) ([]int64, []int64, map[string]int64, map
 		return []int64{}, []int64{}, map[string]int64{}, map[string]int64{}, err
 	}
 	codeSymbols, dataSymbols := pass1(srcLines, ioSize)
-	code, data := pass2(srcLines, codeSymbols, dataSymbols)
+	code, data := pass2(srcLines, codeSymbols, dataSymbols, ioSize)
 	if err := checkJumpsInRange(code); err != nil {
 		return []int64{}, []int64{}, map[string]int64{}, map[string]int64{}, err
 	}
