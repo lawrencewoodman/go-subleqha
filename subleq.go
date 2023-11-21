@@ -1,7 +1,7 @@
 /*
- * SUBLEQ2HA Virtual Machine
+ * SUBLEQHA Virtual Machine
  *
- * A SUBLEQ VM using a Harvard Architecture to keep code and data in
+ * A SUBLEQHA VM using a Harvard Architecture to keep code and data in
  * separate spaces.  Negative numbers passed as operands are indirect
  * addresses.
  *
@@ -10,7 +10,7 @@
  * Licensed under an MIT licence.  Please see LICENCE.md for details.
  */
 
-package subleq2ha
+package subleqha
 
 import (
 	"fmt"
@@ -24,7 +24,7 @@ const ioSize = 1000    // The size of the io area before the true data area
 // If this is used as a destination location then a HLT is executed
 const hltLoc = 0
 
-type SUBLEQ struct {
+type SUBLEQHA struct {
 	code        [dataSize]int64  // Code / Program
 	data        [dataSize]int64  // Data
 	pc          int64            // Program Counter
@@ -35,11 +35,11 @@ type SUBLEQ struct {
 
 }
 
-func New() *SUBLEQ {
-	return &SUBLEQ{}
+func New() *SUBLEQHA {
+	return &SUBLEQHA{}
 }
 
-func (v *SUBLEQ) Run() error {
+func (v *SUBLEQHA) Run() error {
 	hlt := false
 	var valA int64 = 0
 
@@ -77,7 +77,7 @@ func (v *SUBLEQ) Run() error {
 			}
 		}
 
-		//fmt.Printf("PC: %7s    SUBLEQ %s, %s, %s\n", v.addr2symbol(v.pc, true), v.addr2symbol(operandA), v.addr2symbol(operandB), v.addr2symbol(operandC, true))
+		//fmt.Printf("PC: %7s    SUBLEQHA %s, %s, %s\n", v.addr2symbol(v.pc, true), v.addr2symbol(operandA), v.addr2symbol(operandB), v.addr2symbol(operandC, true))
 		//fmt.Printf("                      %d - %d = ", v.data[operandB], v.data[operandA])
 
 		if operandA < ioSize {
@@ -106,7 +106,7 @@ func (v *SUBLEQ) Run() error {
 	return nil
 }
 
-func (v *SUBLEQ) LoadRoutine(code []int64, data []int64, codeSymbols map[string]int64, dataSymbols map[string]int64) {
+func (v *SUBLEQHA) LoadRoutine(code []int64, data []int64, codeSymbols map[string]int64, dataSymbols map[string]int64) {
 	copy(v.code[:], code)
 	copy(v.data[ioSize:], data)
 	v.codeSize = int64(len(v.code))
@@ -114,7 +114,7 @@ func (v *SUBLEQ) LoadRoutine(code []int64, data []int64, codeSymbols map[string]
 	v.dataSymbols = dataSymbols
 }
 
-func (v *SUBLEQ) addr2symbol(addr int64, onlyCode ...bool) string {
+func (v *SUBLEQHA) addr2symbol(addr int64, onlyCode ...bool) string {
 	if len(onlyCode) == 0 {
 		for k, v := range v.dataSymbols {
 			if v == addr {

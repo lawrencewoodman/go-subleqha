@@ -1,4 +1,4 @@
-package subleq2ha
+package subleqha
 
 import (
 	"fmt"

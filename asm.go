@@ -1,12 +1,12 @@
 /*
- * A simple assembler for SUBLEQ2HA virtual machine
+ * A simple assembler for SUBLEQHA virtual machine
  *
  * Copyright (C) 2023 Lawrence Woodman
  *
  * Licensed under an MIT licence.  Please see LICENCE.md for details.
  */
 
-package subleq2ha
+package subleqha
 
 import (
 	"bufio"
