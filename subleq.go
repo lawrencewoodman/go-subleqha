@@ -16,10 +16,6 @@ import (
 	"fmt"
 )
 
-// Location in memory of hltVal
-// If this is used as a destination location then a HLT is executed
-const hltLoc = 0
-
 type SUBLEQHA struct {
 	ioSize        int64
 	dataSize      int64

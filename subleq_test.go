@@ -32,6 +32,10 @@ func testInputHandler(operandA int64) (int64, error) {
 }
 
 func testOutputHandler(valA, operandB int64) (bool, error) {
+	// Location in memory of hltVal
+	// If this is used as a destination location then a HLT is executed
+	const hltLoc = 0
+
 	if operandB == hltLoc {
 		return true, nil
 	}
