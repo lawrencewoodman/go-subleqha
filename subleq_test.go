@@ -27,6 +27,17 @@ var tests = []struct {
 	{"tad_v1.asm", map[int64]int64{1008: 32}},
 }
 
+func testInputHandler(operandA int64) (int64, error) {
+	return 0, nil
+}
+
+func testOutputHandler(valA, operandB int64) (bool, error) {
+	if operandB == hltLoc {
+		return true, nil
+	}
+	return false, nil
+}
+
 func TestRun(t *testing.T) {
 	var dataSize int64 = 31000 // The size of the data area including the io area
 	var ioSize int64 = 1000    // The size of the io area before the true data area
@@ -37,7 +48,7 @@ func TestRun(t *testing.T) {
 			if err != nil {
 				t.Fatalf("asm() err: %v", err)
 			}
-			v := New(ioSize, dataSize)
+			v := New(ioSize, dataSize, testInputHandler, testOutputHandler)
 			v.LoadRoutine(code, data, codeSymbols, dataSymbols)
 			if err := v.Run(); err != nil {
 				t.Fatalf("Run() err: %v", err)
@@ -65,7 +76,7 @@ func BenchmarkRun(b *testing.B) {
 			b.StopTimer()
 
 			for n := 0; n < b.N; n++ {
-				v := New(ioSize, dataSize)
+				v := New(ioSize, dataSize, testInputHandler, testOutputHandler)
 				v.LoadRoutine(code, data, codeSymbols, dataSymbols)
 
 				b.StartTimer()
