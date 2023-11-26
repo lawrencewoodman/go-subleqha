@@ -47,7 +47,7 @@ func TestRun(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.filename, func(t *testing.T) {
-			code, data, codeSymbols, dataSymbols, err := asm(filepath.Join("fixtures", test.filename), ioSize)
+			code, data, codeSymbols, dataSymbols, err := Asm(filepath.Join("fixtures", test.filename), ioSize)
 			if err != nil {
 				t.Fatalf("asm() err: %v", err)
 			}
@@ -70,7 +70,7 @@ func BenchmarkRun(b *testing.B) {
 	var ioSize int64 = 1000    // The size of the io area before the true data area
 
 	for _, test := range tests {
-		code, data, codeSymbols, dataSymbols, err := asm(filepath.Join("fixtures", test.filename), ioSize)
+		code, data, codeSymbols, dataSymbols, err := Asm(filepath.Join("fixtures", test.filename), ioSize)
 		if err != nil {
 			b.Fatalf("asm() err: %v", err)
 		}

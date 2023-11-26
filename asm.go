@@ -272,7 +272,7 @@ func printSymbols(symbols map[string]int64) {
 	fmt.Printf("\n")
 }
 
-func asm(filename string, ioSize int64) ([]int64, []int64, map[string]int64, map[string]int64, error) {
+func Asm(filename string, ioSize int64) ([]int64, []int64, map[string]int64, map[string]int64, error) {
 	srcLines, err := readFile(filename)
 	if err != nil {
 		return []int64{}, []int64{}, map[string]int64{}, map[string]int64{}, err

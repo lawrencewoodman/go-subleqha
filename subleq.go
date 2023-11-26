@@ -83,8 +83,8 @@ func (v *SUBLEQHA) Run() error {
 			}
 		}
 
-		//fmt.Printf("PC: %7s    SUBLEQHA %s, %s, %s\n", v.addr2symbol(v.pc, true), v.addr2symbol(operandA), v.addr2symbol(operandB), v.addr2symbol(operandC, true))
-		//fmt.Printf("                      %d - %d = ", v.data[operandB], v.data[operandA])
+		// fmt.Printf("PC: %7s    SUBLEQHA %s, %s, %s\n", v.addr2symbol(v.pc, true), v.addr2symbol(operandA), v.addr2symbol(operandB), v.addr2symbol(operandC, true))
+		// fmt.Printf("                      %d - %d = ", v.data[operandB], v.data[operandA])
 
 		// If an IO operation
 		if operandA < v.ioSize {
@@ -115,7 +115,7 @@ func (v *SUBLEQHA) Run() error {
 			} else {
 				v.pc += 3
 			}
-			//fmt.Printf("%d\n", v.data[operandB])
+			// fmt.Printf("%d\n", v.data[operandB])
 		}
 
 	}
